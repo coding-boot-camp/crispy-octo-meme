@@ -1,13 +1,31 @@
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
-$(function () {
+
+$(function () { //prevents code from running prior to render/load
+  const saveBtnEl = $(":button");
+  console.log(saveBtnEl);
+  saveBtnEl.click(function (event) {
+    const calEvents = [];
+    const inputText = (event.currentTarget.parentElement.children[1].value.trim());
+    const inputTime = (event.currentTarget.parentElement.id);
+    calEvents.push({ inputText, inputTime });
+    localStorage.setItem('calEvent', JSON.stringify(calEvents));
+    // console.log(text);
+  })
+
+  // var nameVal = document.getElementById("name").value;
+  // if (!leaderboardNames) {
+  //   leaderboardNames = []
+  // };
+  // leaderboardNames.push({ nameVal, correct });
+
+
   // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
+  // local storage. 
+
+  // HINT: What does `this` reference in the click listener function? How can DOM traversal be used to get the "hour-x" id of the time-block containing the button that was clicked? How might the id be useful when saving the description in local storage?
+
+
+
   //
   // TODO: Add code to apply the past, present, or future class to each time
   // block by comparing the id to the current hour. HINTS: How can the id
