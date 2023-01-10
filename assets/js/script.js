@@ -1,52 +1,83 @@
 
 $(function () { //prevents code from running prior to render/load
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. 
 
-  // HINT: What does `this` reference in the click listener function? How can DOM traversal be used to get the "hour-x" id of the time-block containing the button that was clicked? How might the id be useful when saving the description in local storage?
+  let calEvents;
+
   function saveCalEvents() {
     const saveBtnEl = $(":button");
-    // console.log(saveBtnEl);
     saveBtnEl.click(function (event) {
-      // var nameVal = document.getElementById("name").value;
-      // if (!leaderboardNames) {
-      //   leaderboardNames = []
-      // };
-      // leaderboardNames.push({ nameVal, correct });
-      let calEvents = [];
+      if (!calEvents) {
+        calEvents = {};
+      };
       const inputText = (event.currentTarget.parentElement.children[1].value.trim());
       const inputTime = (event.currentTarget.parentElement.id);
-      calEvents.push({ inputText, inputTime });
-      localStorage.setItem('calEvent', JSON.stringify(calEvents));
+      calEvents[inputTime] = inputText;
+      localStorage.setItem('calEvents', JSON.stringify(calEvents));
     })
   };
 
+  saveCalEvents();
 
-  //gary recommends that we use moment.js instead of day.js
-  //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
+  var currentTime = moment().hour();
 
-  //
+  function setCurrentTime(time) { //time is the method signature
+    var timeEl = $(time);
+    timeEl.addClass("present");
+  };
+
+  function setPastTime(time) { //time is the method signature
+    var timeEl = $(time);
+    timeEl.addClass("past");
+  };
+
+  function setFutureTime(time) { //time is the method signature
+    var timeEl = $(time);
+    timeEl.addClass("future");
+  };
+
+  // setCurrentTime(`#hour-${currentTime}`); //backticks act as quotations
+
+  function setTimes(time) {
+    if (time > currentTime) {
+      setFutureTime(`#hour-${time}`);
+    } else if (time < currentTime) {
+      setPastTime(`#hour-${time}`);
+    } else {
+      setCurrentTime(`#hour-${time}`);
+    }
+  }
+
+  var savedEvents = JSON.parse(localStorage.getItem('calEvents'));
+
+  const possibleTimes = [9, 10, 11, 12, 13, 14, 15, 16, 17];
+  for (var time of possibleTimes) {
+    setTimes(time);
+    // console.log(time);
+    // console.log(savedEvents[`hour-${time}`]);
+    // figure out how to get the key and tie it to the html id
+    // savedEvents key 
+    var targetTime = $(`#hour-${time}`);
+    console.log(targetTime);
+    // targetTime.textarea.innerhtml = savedEvents[`hour-${time}`]
+  };
+
   // TODO: Add code to get any user input that was saved in localStorage and set
   // the values of the corresponding textarea elements. HINT: How can the id
   // attribute of each time-block be used to do this?
 
-  //
-  // TODO: Add code to display the current date in the header of the page.
+  // console.log(savedEvents["hour-10"]);
 
+
+
+  // for (var entry of calEvents) {
+
+  //   };const lB1 = document.createElement("li");
+  //   entry.inputTime
+  //   lB1.innerHTML = `${entry.inputText}`;
+  // }
+
+  // TODO: Add code to display the current date in the header of the page.
   const todayEl = $("#currentDay");
-  console.log(todayEl);
   const today = moment().format("MMMM Do, YYYY");
   todayEl[0].innerHTML = today;
-  console.log(today);
 });
-
-
-//make a moment object of the current day and time
-//make a numeric value of the current hour (military time)
-// hw sets up the full calendar structure in the html
