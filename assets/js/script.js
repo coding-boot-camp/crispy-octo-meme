@@ -1,45 +1,43 @@
 
 $(function () { //prevents code from running prior to render/load
 
-  let calEvents;
+  let calEvents = JSON.parse(localStorage.getItem('calEvents')); // sets this var to local storage so it doesn't overwrite what is already in local storage
 
-  function saveCalEvents() {
-    const saveBtnEl = $(":button");
-    saveBtnEl.click(function (event) {
-      if (!calEvents) {
-        calEvents = {};
-      };
-      const inputText = (event.currentTarget.parentElement.children[1].value.trim());
-      const inputTime = (event.currentTarget.parentElement.id);
-      calEvents[inputTime] = inputText;
-      localStorage.setItem('calEvents', JSON.stringify(calEvents));
-    })
+  if (!calEvents) { // checks to see if there is anything in local storage first
+    calEvents = {}; // creates an object for local strorage if none exists
   };
 
-  saveCalEvents();
+  // save events to local storage ---------------------------------------------------
+  const saveBtnEl = $(":button");
+  saveBtnEl.click(function (event) {
+    const inputText = (event.currentTarget.parentElement.children[1].value.trim()); // user input text
+    const inputTime = (event.currentTarget.parentElement.id); // grabs the time block for user input
+    calEvents[inputTime] = inputText; // ties the time block to the input text
+    localStorage.setItem('calEvents', JSON.stringify(calEvents)); // sets it to local storage
+  })
 
-  var currentTime = moment().hour();
+    // apply correct class to timeslot ---------------------------------------------------
+
+  var currentTime = moment().hour(); // determines current time
 
   function setCurrentTime(time) { //time is the method signature
     var timeEl = $(time);
     timeEl.addClass("present");
   };
 
-  function setPastTime(time) { //time is the method signature
+  function setPastTime(time) { 
     var timeEl = $(time);
     timeEl.addClass("past");
   };
 
-  function setFutureTime(time) { //time is the method signature
+  function setFutureTime(time) { 
     var timeEl = $(time);
     timeEl.addClass("future");
   };
 
-  // setCurrentTime(`#hour-${currentTime}`); //backticks act as quotations
-
-  function setTimes(time) {
+  function setTimes(time) { // this function sets the class by time of day
     if (time > currentTime) {
-      setFutureTime(`#hour-${time}`);
+      setFutureTime(`#hour-${time}`); //backticks act as quotations
     } else if (time < currentTime) {
       setPastTime(`#hour-${time}`);
     } else {
@@ -47,36 +45,18 @@ $(function () { //prevents code from running prior to render/load
     }
   }
 
-  var savedEvents = JSON.parse(localStorage.getItem('calEvents'));
+   // pull text from local storage and set to correct timeslot-------------------------------------
 
-  const possibleTimes = [9, 10, 11, 12, 13, 14, 15, 16, 17];
+  const possibleTimes = [9, 10, 11, 12, 13, 14, 15, 16, 17]; // sets the text input to the correct timeslot from local storage
   for (var time of possibleTimes) {
     setTimes(time);
-    // console.log(time);
-    // console.log(savedEvents[`hour-${time}`]);
-    // figure out how to get the key and tie it to the html id
-    // savedEvents key 
     var targetTime = $(`#hour-${time}`);
-    console.log(targetTime);
-    // targetTime.textarea.innerhtml = savedEvents[`hour-${time}`]
+    var targetTextArea = targetTime.find('textarea');
+    targetTextArea.val(calEvents[`hour-${time}`]);
   };
 
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
+// sets date at top -------------------------------------
 
-  // console.log(savedEvents["hour-10"]);
-
-
-
-  // for (var entry of calEvents) {
-
-  //   };const lB1 = document.createElement("li");
-  //   entry.inputTime
-  //   lB1.innerHTML = `${entry.inputText}`;
-  // }
-
-  // TODO: Add code to display the current date in the header of the page.
   const todayEl = $("#currentDay");
   const today = moment().format("MMMM Do, YYYY");
   todayEl[0].innerHTML = today;
