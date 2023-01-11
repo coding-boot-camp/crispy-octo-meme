@@ -1,5 +1,7 @@
 # Work Day Scheduler
+![Click here to view final version of webpage](https://kcschaefs.github.io/workday-scheduler/)
 
+![Screenshot of the final page](./assets/images/Screenshot%20at%20Jan%2011%2017-24-58.png)
 
 ## User Story
 AS AN employee with a busy schedule
@@ -25,5 +27,3 @@ SO THAT I can manage my time effectively
 - Add an x button option for deleting the inputs from timeslots
 - allow for multiple items to be saved/deleted in a single timeslot
 - allow for multiple days
-
-
