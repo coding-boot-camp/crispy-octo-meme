@@ -1,10 +1,29 @@
 // Wrap all code that interacts with the DOM in a call to jQuery to ensure that
 // the code isn't run until the browser has finished rendering all the elements
 // in the html.
-$(function () {
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
+var currentDateElement = $('<h1>');
+// Set the text content of the element to the current date string
+currentDateElement.text(dayjs().format('dddd, MMMM D, YYYY'));
+// Add the element to the header
+$('header').append(currentDateElement);
+$(function() {
+  var button = document.getElementById('my-button');
+  var saveBtn = document.getElementById('hour-9');
+  
+  var date = dayjs(); 
+    var formattedDate = date.format('YYYY-MM-DDTHH:mm:ssZ[Z]');
+    console.log(formattedDate);
+
+$('.saveBtn').click(function() {
+  var userInput = $(this).siblings('textarea').val();
+  var timeBlockId = $(this).closest('.time-block').attr('id');
+  localStorage.setItem(timeBlockId, userInput);
+});
+
+
+ 
+
+  //HINT: What does `this` reference in the click listener
   // function? How can DOM traversal be used to get the "hour-x" id of the
   // time-block containing the button that was clicked? How might the id be
   // useful when saving the description in local storage?
@@ -20,4 +39,26 @@ $(function () {
   // attribute of each time-block be used to do this?
   //
   // TODO: Add code to display the current date in the header of the page.
+
+  var currentHour = dayjs().hour();
+
+  $('.time-block').each(function() {
+    var timeBlockHour = parseInt($(this).attr("id").split("-")[1]);
+    if (timeBlockHour < currentHour) {
+      $(this).addClass('past').removeClass('present future');
+    } else if (timeBlockHour === currentHour) {
+      $(this).addClass('present').removeClass('past future');
+    } else {
+      $(this).addClass('future').removeClass('past present');
+    }
+  });
+
+  $('.time-block').each(function() {
+    var timeBlockId = $(this).attr('id');
+    var userInput = localStorage.getItem(timeBlockId);
+    $(this).find('textarea').val(userInput);
+  });
+
+
+
 });
